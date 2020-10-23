@@ -25,17 +25,18 @@ request('/phones.json')
       .then((IdFirstPromise) => {
         request(`/phones/${IdFirstPromise}.json`)
           .then(details => {
+            // eslint-disable-next-line no-console
             console.log(details);
           });
       });
 
     getAllSuccessfulDetails(phonesIds)
+      // eslint-disable-next-line no-console
       .then(arrDetails => console.log(arrDetails));
 
-console.log(getThreeFastestDetails(phonesIds))
-    
     // getThreeFastestDetails(phonesIds)
-      // .then(results => console.log(results));
+    //   // eslint-disable-next-line no-console
+    //   .then(results => console.log(results));
   });
 
 function getFirstReceivedDetails(ids) {
