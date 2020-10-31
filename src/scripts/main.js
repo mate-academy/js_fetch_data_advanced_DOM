@@ -63,7 +63,7 @@ IDs.then((arrOfIDs) =>
   getAllSuccessfulDetails(arrOfIDs).then((arrSuccessful) => {
     arrSuccessful.forEach((element) => {
       if (element.status === 'fulfilled') {
-        console.log(element);
+        console.log(element.value);
       }
     });
   })
