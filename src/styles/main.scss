@@ -22,3 +22,38 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+.first-received {
+  position: fixed;
+  left: 50px;
+  text-align: center;
+  padding: 5px;
+  width: 35%;
+  height: 500px;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  background-color: rgba(219, 162, 157, 0.6);
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+.all-successful {
+  position: fixed;
+  margin-top: 5px;
+  text-align: center;
+  left: 50%;
+  padding-top: 15px;
+  height: 100%;
+  width: 50%;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  background-color: rgba(219, 162, 157, 0.6);
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+ul {
+  list-style: none;
+}
+
+.li-header {
+  margin-top: 15px;
+}
