@@ -1,8 +1,6 @@
 'use strict';
 
 const BASE_URL = 'https://mate-academy.github.io/phone-catalogue-static/api';
-const arrPromises = [];
-const arrPromisesWith3Element = [];
 
 const request = (url) => {
   // eslint-disable-next-line no-undef
@@ -16,6 +14,23 @@ const request = (url) => {
       return response.json();
     });
 };
+
+const getFirstReceivedDetails = (ids) => {
+  return Promise.race(ids.map(id => new Promise(resolve => {
+    setTimeout(() => {
+      resolve(id);
+    }, Math.round(Math.random() * 1000));
+  })));
+};
+
+function getAllSuccessfulDetails(arrIds) {
+  return Promise.allSettled(
+    arrIds.map(id => {
+      return request(`/phones/${id}.json`)
+        .then(response => response);
+    })
+  );
+}
 
 request('/phones.json')
   .then(listPhones => {
@@ -32,46 +47,24 @@ request('/phones.json')
 
     getAllSuccessfulDetails(phonesIds)
       // eslint-disable-next-line no-console
-      .then(arrDetails => console.log(arrDetails));
+      .then(arrPromise => console.log(arrPromise.filter(item => {
+        if (item.status === 'fulfilled') {
+          return item.value;
+        }
+      })));
 
-    // getThreeFastestDetails(phonesIds)
-    //   // eslint-disable-next-line no-console
-    //   .then(results => console.log(results));
+    // eslint-disable-next-line no-console
+    console.log(getThreeFastestDetails(phonesIds));
   });
 
-function getFirstReceivedDetails(ids) {
-  ids.forEach(id => {
-    const newPromise = new Promise(resolve => {
-      setTimeout(() => {
-        resolve(id);
-      }, Math.round(Math.random() * 1000));
-    });
+function getThreeFastestDetails(arrayIds) {
+  const threeFastestDetails = [];
 
-    arrPromises.push(newPromise);
-  });
-
-  return Promise.race(arrPromises);
-}
-
-function getAllSuccessfulDetails(arrIds) {
-  return Promise.all(
-    arrIds.map(id => {
-      return request(`/phones/${id}.json`)
-        .then(response => response);
-    })
+  threeFastestDetails.push(
+    getFirstReceivedDetails(arrayIds),
+    getFirstReceivedDetails(arrayIds),
+    getFirstReceivedDetails(arrayIds)
   );
+
+  return threeFastestDetails;
 }
-
-// function getThreeFastestDetails(arrayIds) {
-//   arrayIds.forEach(id => {
-//     const newPromise = new Promise(resolve => {
-//       setTimeout(() => {
-//         resolve(id);
-//       }, Math.round(Math.random() * 1000));
-//     });
-
-//     arrPromisesWith3Element.push(newPromise);
-//   });
-
-//   return Promise.all(arrPromisesWith3Element);
-// }
