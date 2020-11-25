@@ -30,11 +30,7 @@ const getAllSuccessfulDetails = () => {
     .then(result => result.map(res => res.value));
 };
 const getThreeFastesDetails = () => {
-  return Promise.all([
-    getFirstReceivedDetails(),
-    getFirstReceivedDetails(),
-    getFirstReceivedDetails(),
-  ]);
+  return getAllSuccessfulDetails().then(result => result.slice(0, 3));
 };
 
 // eslint-disable-next-line no-console
