@@ -19,8 +19,8 @@ Create next functions:
 (optional) `getThreeFastestDetails` which takes array of phones IDs and `resolves` with an array of the details for the first 3 responses (the fastest).
 
 Hints: 
-- You have to use DOM to notify users about resolved or rejected promises. 
-- Your <div> elements with phones should have classes `first-received` and `all-successful`.
-- `First Received` and `All Successful` text should have <h3> headings.
-- Names of phones should be <h4> and uppercase.
+- You have to use DOM to notify users about resolved or rejected promises; 
+- Create <div> elements with classes `first-received` and `all-successful` which contain list of phones;
+- Each <div> element should have <h3> headings with `First Received` or `All Successful` text;
+- Names of phones should be in <h4> headings and uppercase;
 - All IDs should be in <li> elements.
