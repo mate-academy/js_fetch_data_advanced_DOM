@@ -20,7 +20,7 @@ Create next functions:
 
 Hints: 
 - You have to use DOM to notify users about resolved or rejected promises. 
-- Your elements should have classes `first-received` and `all-successful`.
-- `First Received` and `All Successful` should have <h3> headings.
+- Your <div> elements with phones should have classes `first-received` and `all-successful`.
+- `First Received` and `All Successful` text should have <h3> headings.
 - Names of phones should be <h4> and uppercase.
 - All IDs should be in <li> elements.
