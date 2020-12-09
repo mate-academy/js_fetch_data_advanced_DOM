@@ -22,5 +22,4 @@ Hints:
 - You have to use DOM to notify users about resolved or rejected promises; 
 - Create <div> elements with classes `first-received` and `all-successful` which contain list of phones;
 - Each <div> element should have <h3> headings with `First Received` or `All Successful` text;
-- Names of phones should be in <h4> headings and uppercase;
-- All IDs should be in <li> elements.
+- All IDs and names of phones should be inside of  <li> elements.
