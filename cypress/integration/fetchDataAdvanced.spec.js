@@ -8,7 +8,7 @@ describe('Fetch phones app', () => {
 
   it('should take an array of all successfully received details', () => {
     cy.get('@all').contains('All Successful');
-    cy.get('ul').children().should('have.length', 300);
+    cy.get('ul').children().should('have.length', 40);
   });
 
   it('should contain phones in all successful', () => {
