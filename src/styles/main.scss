@@ -29,8 +29,7 @@ body {
   text-align: center;
   padding: 15px;
   width: 35%;
-  height: relative;
-  overflow-y: scroll;
+  overflow-y: auto;
   scroll-behavior: smooth;
   background-color: rgba(157, 199, 219, 0.6);
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
@@ -42,7 +41,7 @@ body {
   margin-top: 5px;
   text-align: center;
   left: 60%;
-  padding: 5px, 5px, 5px, 5px;
+  padding: 5px;
   height: 90%;
   width: 35%;
   overflow-y: scroll;
@@ -53,9 +52,32 @@ body {
 }
 
 ul {
+  padding-left: 0;
   list-style: none;
+  li {
+    padding: 0 0 10px;
+    > span {
+      color: #737373;
+      font-size: 0.9rem;
+    }
+  }
 }
 
 .li-header {
   margin-top: 15px;
+}
+
+.message {
+  position: fixed;
+  top: 10px;
+  right: 30px;
+  text-align: right;
+
+  &-success {
+    color: rgb(80, 115, 0);
+  }
+
+  &-error {
+    color: rgb(235, 0, 70);
+  }
 }
