@@ -51,7 +51,7 @@ const pushNotification = function(header, data, useClass) {
   notification.innerHTML = `
     <h3>${header}</h3>
     <ul>
-      ${data.map(item => `<li>${item.id.toUpperCase()}</li>`)}
+      ${data.map(item => `<li>${item.id.toUpperCase()}</li>`).join('')}
     </ul>
   `;
 
