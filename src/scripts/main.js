@@ -17,14 +17,14 @@ const getListOfIds = function() {
 
 const fetchDetails = function(id) {
   const url = `${DETAILS_BASE_URL}/${id}.json`;
-  const resolver = function(resolve) {
+  const resolver = function(resolve, reject) {
     fetch(url)
       .then(res => {
-        // Если получил ошибку то резолвлю пустой строкой
+        // Если получил ошибку то реджектлю пустой строкой
         if (res.ok) {
           return res.json();
         } else {
-          return '';
+          reject('');
         }
       })
       .then(details => resolve(details));
@@ -38,8 +38,11 @@ const getFirstReceivedDetails = function(listOfIds) {
 };
 
 const getAllSuccessfulDetails = function(listOfIds) {
-  return Promise.all(listOfIds.map(id => fetchDetails(id)))
-    .then(list => list.filter(item => item !== ''));
+  return Promise.allSettled(listOfIds.map(id => fetchDetails(id)))
+    .then(results => {
+      return results.filter(result => result.status === 'fulfilled')
+        .map(item => item.value).filter(value => value !== '');
+    });
 };
 
 const pushNotification = function(header, data, useClass) {
