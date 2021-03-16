@@ -20,14 +20,14 @@ const fetchDetails = function(id) {
   const resolver = function(resolve, reject) {
     fetch(url)
       .then(res => {
-        // Если получил ошибку то реджектлю пустой строкой
         if (res.ok) {
           return res.json();
         } else {
-          reject('');
+          throw new Error('Some error occured');
         }
       })
-      .then(details => resolve(details));
+      .then(details => resolve(details))
+      .catch(error => reject(error));
   };
 
   return new Promise(resolver);
@@ -41,7 +41,7 @@ const getAllSuccessfulDetails = function(listOfIds) {
   return Promise.allSettled(listOfIds.map(id => fetchDetails(id)))
     .then(results => {
       return results.filter(result => result.status === 'fulfilled')
-        .map(item => item.value).filter(value => value !== '');
+        .map(item => item.value);
     });
 };
 
