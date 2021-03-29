@@ -13,9 +13,9 @@ const createList = (phones, classN, headText) => {
 
   divAll.className = classN;
 
-  const heading = document.createElement('h3');
+  const headingAll = document.createElement('h3');
 
-  heading.textContent = headText;
+  headingAll.textContent = headText;
 
   const list = document.createElement('ul');
 
@@ -25,7 +25,7 @@ const createList = (phones, classN, headText) => {
     li.textContent = `${phone.id.toUpperCase()} ${phone.name}`;
     list.append(li);
   }
-  divAll.append(heading);
+  divAll.append(headingAll);
   divAll.append(list);
   body.append(divAll);
 };
@@ -35,14 +35,14 @@ const createElem = (phone, classN, headText) => {
 
   divFirst.className = classN;
 
-  const heading = document.createElement('h3');
+  const headingFirst = document.createElement('h3');
 
-  heading.textContent = headText;
+  headingFirst.textContent = headText;
 
   const li = document.createElement('li');
 
   li.textContent = `${phone.id} ${phone.name}`;
-  divFirst.append(heading);
+  divFirst.append(headingFirst);
   divFirst.append(li);
   body.append(divFirst);
 };
