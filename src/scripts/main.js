@@ -8,32 +8,30 @@ const url = `${
 
 const body = document.querySelector('body');
 
-const createList = (phones, classN, headText) => {
+const createList = (phones, className, headText) => {
   const divAll = document.createElement('div');
 
-  divAll.className = classN;
+  divAll.classList = className;
 
   const headingAll = document.createElement('h3');
 
   headingAll.textContent = headText;
-
-  const list = document.createElement('ul');
+  divAll.append(headingAll);
 
   for (const phone of phones) {
     const li = document.createElement('li');
 
     li.textContent = `${phone.id.toUpperCase()} ${phone.name}`;
-    list.append(li);
+    divAll.append(li);
   }
-  divAll.append(headingAll);
-  divAll.append(list);
+
   body.append(divAll);
 };
 
-const createElem = (phone, classN, headText) => {
+const createElem = (phone, className, headText) => {
   const divFirst = document.createElement('div');
 
-  divFirst.className = classN;
+  divFirst.classList = className;
 
   const headingFirst = document.createElement('h3');
 
@@ -75,7 +73,7 @@ const getFirstReceivedDetails = (arrayIds) => {
 };
 
 const getAllSuccessfulDetails = (arrayIds) => {
-  return Promise.all(arrayIds.map((id) => {
+  const promiseSettled = Promise.allSettled(arrayIds.map((id) => {
     return new Promise((resolve, reject) => {
       fetch(`${details}/${id}.json`)
         .then((response) => {
@@ -83,6 +81,11 @@ const getAllSuccessfulDetails = (arrayIds) => {
         });
     });
   }));
+
+  return promiseSettled
+    .then((result) => {
+      return result.filter(objExecution => objExecution.status === 'fulfilled');
+    });
 };
 
 getPhones()
