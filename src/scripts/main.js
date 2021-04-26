@@ -3,33 +3,17 @@
 const API_URL = 'https://mate-academy.github.io/phone-catalogue-static/api';
 
 function getFirstReceivedDetails(phonesIds) {
-  return new Promise(resolve => {
-    phonesIds.forEach(phoneId => {
-      fetch(API_URL + `/phones/${phoneId}.json`)
-        .then(resp => resp.json())
-        .then(detail => resolve(detail));
-    });
-  });
+  return Promise.race(phonesIds.map(phoneId =>
+    fetch(API_URL + `/phones/${phoneId}.json`)
+      .then(resp => resp.json())));
 }
 
 function getAllSuccessfulDetails(phonesIds) {
-  let fastestResponsesCount = 0;
-
-  return new Promise(resolve => {
-    resolve(
-      phonesIds.map(phoneId =>
-        fetch(API_URL + `/phones/${phoneId}.json`)
-          .then(resp => resp.json())
-          .then(detail => {
-            if (fastestResponsesCount < 3) {
-              fastestResponsesCount++;
-
-              return detail;
-            }
-          }),
-      ),
-    );
-  });
+  return Promise.allSettled(
+    phonesIds.map(phoneId => fetch(API_URL + `/phones/${phoneId}.json`)
+      .then(resp => resp.json())))
+    .then(results => results.slice(0, 3))
+    .then(results => results.map(result => result.value));
 }
 
 function getPhones() {
@@ -39,8 +23,8 @@ function getPhones() {
 
 getPhones()
   .then(phones => phones.map(phone => phone.id))
-  .then(phonesIds =>
-    getFirstReceivedDetails(phonesIds)
+  .then(phoneId =>
+    getFirstReceivedDetails(phoneId)
       .then(first => {
         const firstReceived = `
           <div class="first-received">
@@ -61,29 +45,27 @@ getPhones()
   .then(phonesIds =>
     getAllSuccessfulDetails(phonesIds)
       .then(phones => {
-        for (let i = 0; i < 3; i++) {
-          phones[i].then(phone => {
-            const ulElement = document.querySelector('.all-successful ul');
+        phones.forEach(phone => {
+          const ulElement = document.querySelector('.all-successful ul');
 
-            if (ulElement) {
-              ulElement.insertAdjacentHTML(
-                'beforeend',
-                `<li>${phone.name}</li>`,
-              );
-            } else {
-              const allSuccessful = `
-                <div class="all-successful">
-                  <h3>All Successful</h3>
-                  <ul>
-                      <li>${phone.name}</li>
-                  </ul>
-                </div>
-              `;
+          if (ulElement) {
+            ulElement.insertAdjacentHTML(
+              'beforeend',
+              `<li>${phone.name}</li>`,
+            );
+          } else {
+            const allSuccessful = `
+              <div class="all-successful">
+                <h3>All Successful</h3>
+                <ul>
+                    <li>${phone.name}</li>
+                </ul>
+              </div>
+            `;
 
-              document.querySelector('body')
-                .insertAdjacentHTML('beforeend', allSuccessful);
-            }
-          });
-        }
+            document.querySelector('body')
+              .insertAdjacentHTML('beforeend', allSuccessful);
+          }
+        });
       }),
   );
