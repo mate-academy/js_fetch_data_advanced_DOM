@@ -82,11 +82,11 @@ function getThreeFastestDetails(arr) {
 
 function createList(header, phrase) {
   const list = document.createElement('ul');
-  const h2 = document.createElement('h2');
+  const h3 = document.createElement('h3');
 
-  h2.innerText = `${header}`;
+  h3.innerText = `${header}`;
   list.setAttribute('class', `${phrase}`);
-  list.appendChild(h2);
+  list.appendChild(h3);
 
   return list;
 }
