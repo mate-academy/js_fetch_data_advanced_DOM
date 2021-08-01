@@ -1,0 +1,124 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 2,
+    "passes": 2,
+    "pending": 0,
+    "failures": 0,
+    "start": "2021-08-01T13:24:12.418Z",
+    "end": "2021-08-01T13:24:13.645Z",
+    "duration": 1181,
+    "testsRegistered": 2,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "6f03d95e-1c71-4a37-b9a2-a9e5695e6182",
+      "title": "",
+      "fullFile": "cypress/integration/fetchDataAdvanced.spec.js",
+      "file": "cypress/integration/fetchDataAdvanced.spec.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "a04fa6e3-8b71-4437-ac93-6a713c4c5030",
+          "title": "Fetch phones app",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "should take an array of all successfully received details",
+              "fullTitle": "Fetch phones app should take an array of all successfully received details",
+              "timedOut": null,
+              "duration": 745,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.get('@all').contains('All Successful');",
+              "err": {},
+              "uuid": "44725795-20c3-4f08-8ee9-220172362c8a",
+              "parentUUID": "a04fa6e3-8b71-4437-ac93-6a713c4c5030",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should contain phones in all successful",
+              "fullTitle": "Fetch phones app should contain phones in all successful",
+              "timedOut": null,
+              "duration": 436,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.get('@all').contains('MOTOROLA-XOOM-WITH-WI-FI');\ncy.get('@all').contains('MOTOROLA-XOOM');\ncy.get('@all').contains('MOTOROLA-CHARM-WITH-MOTOBLUR');",
+              "err": {},
+              "uuid": "24be32de-1bbd-4397-b526-61f89ee3d02f",
+              "parentUUID": "a04fa6e3-8b71-4437-ac93-6a713c4c5030",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "44725795-20c3-4f08-8ee9-220172362c8a",
+            "24be32de-1bbd-4397-b526-61f89ee3d02f"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 1181,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.0.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "6.2.1"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "raw_reports",
+        "overwrite": false,
+        "html": false,
+        "json": true
+      },
+      "version": "5.1.0"
+    }
+  }
+}
