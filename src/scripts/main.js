@@ -5,50 +5,53 @@ const baseURL
 const idURL
 = 'https://mate-academy.github.io/phone-catalogue-static/api/phones/';
 
-const globalList = getAllIds();
+const allPhonesList = getAllPhones();
 
-globalList
+allPhonesList
   .then(data => {
-    const idsList = data.map(phone => phone.id);
+    const phoneIds = data.map(phone => phone.id);
 
-    const allSuccessful = getAllSuccessful(idsList);
+    const allSuccessfulDetails = getAllSuccessfulDetails(phoneIds);
 
-    const firstReceived = getFirstReceived(idsList);
+    const firstReceived = getFirstReceived(phoneIds);
 
-    const firstThreeWinners = getFirstThreeWinners(idsList);
+    const firstThreeReceived = getFirstThree(phoneIds);
 
-    allSuccessful
-      .then(allSuccessfulList => createNotification(allSuccessfulList));
+    allSuccessfulDetails
+      .then(responses => {
+        const successfullResponses = responses.filter(response => {
+          return response.status === 'fulfilled';
+        });
 
-    firstReceived
-      .then(winner => {
-        const winners = [];
+        const successfulDetailsList
+        = successfullResponses.map(response => response.value);
 
-        winners.push(winner);
-
-        createNotification(winners, 'first');
+        createNotification(successfulDetailsList);
       });
 
-    firstThreeWinners
-      .then(result => createNotification(result, 'first three'));
+    firstReceived
+      .then(phone => createNotification([phone], 'first-received'));
+
+    firstThreeReceived
+      .then(phones => createNotification(phones, 'first-three'));
   });
 
-function getAllIds() {
+function getAllPhones() {
   return fetch(baseURL)
     .then(response => response.json());
 }
 
-function getAllSuccessful(list) {
-  const promises = list.map(id => {
+function getAllSuccessfulDetails(data) {
+  const promises = data.map(id => {
     return fetch(idURL + `${id}.json`)
       .then(response => response.json());
   });
 
-  return Promise.all(promises);
+  return Promise.allSettled(promises);
 }
 
-function getFirstReceived(list) {
-  const promises = list.map(id => {
+function getFirstReceived(data) {
+  const promises = data.map(id => {
     return fetch(idURL + `${id}.json`)
       .then(response => response.json());
   });
@@ -56,44 +59,47 @@ function getFirstReceived(list) {
   return Promise.race(promises);
 }
 
-function getFirstThreeWinners(list) {
-  const promises = list.map(id => {
-    return fetch(idURL + `${id}.json`)
-      .then(response => response.json());
+function getFirstThree(phones) {
+  return new Promise((resolve, reject) => {
+    const phonesDetails = [];
+
+    phones.map(id => {
+      fetch(idURL + `${id}.json`)
+        .then(response => response.json())
+        .then(phone => {
+          if (phonesDetails.length < 3) {
+            phonesDetails.push(phone);
+          }
+
+          if (phonesDetails.length === 3) {
+            resolve(phonesDetails);
+          }
+        });
+    });
   });
-
-  const firstThreeWinnersList = [];
-
-  for (let i = 0; i < 3; i++) {
-    const winner = Promise.race(promises);
-
-    firstThreeWinnersList.push(winner);
-  }
-
-  return Promise.all(firstThreeWinnersList);
 }
 
-function createNotification(allSuccessfulList, type = 'success') {
+function createNotification(list, type = 'all') {
   const notification = document.createElement('div');
-  const header = document.createElement('h3');
+  const header = document.createElement('h2');
   const notificationContent = document.createElement('ul');
 
-  notification.className = type === 'success'
+  notification.className = type === 'all'
     ? 'all-successful'
-    : type === 'first'
+    : type === 'first-received'
       ? 'first-received'
       : 'first-three';
 
-  header.textContent = type === 'success'
+  header.innerText = type === 'all'
     ? 'All successful'
-    : type === 'first'
+    : type === 'first-received'
       ? 'First received'
-      : 'Fastest three';
+      : 'First three';
 
-  allSuccessfulList.forEach(phone => {
+  list.forEach(phone => {
     notificationContent.insertAdjacentHTML('beforeend', `
-      <li>
-        Phone name: ${phone.name},<br> phone ID: ${phone.id}
+    <li>
+      Phone name: ${phone.name}, phone ID: ${phone.id}
       </li>
       `);
   });
@@ -101,4 +107,4 @@ function createNotification(allSuccessfulList, type = 'success') {
   notification.append(header);
   notification.append(notificationContent);
   document.body.append(notification);
-}
+};
