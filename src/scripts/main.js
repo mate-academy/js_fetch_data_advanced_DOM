@@ -30,10 +30,10 @@ allPhonesList
       });
 
     firstReceived
-      .then(phone => createNotification([phone], 'first-received'));
+      .then(phone => createNotification([phone], 'First received'));
 
     firstThreeReceived
-      .then(phones => createNotification(phones, 'first-three'));
+      .then(phones => createNotification(phones, 'First three'));
   });
 
 function getAllPhones() {
@@ -79,22 +79,14 @@ function getFirstThree(phones) {
   });
 }
 
-function createNotification(list, type = 'all') {
+function createNotification(list, type = 'All successful') {
   const notification = document.createElement('div');
   const header = document.createElement('h2');
   const notificationContent = document.createElement('ul');
 
-  notification.className = type === 'all'
-    ? 'all-successful'
-    : type === 'first-received'
-      ? 'first-received'
-      : 'first-three';
+  notification.className = type.toLowerCase().replace(' ', '-');
 
-  header.innerText = type === 'all'
-    ? 'All successful'
-    : type === 'first-received'
-      ? 'First received'
-      : 'First three';
+  header.innerText = type;
 
   list.forEach(phone => {
     notificationContent.insertAdjacentHTML('beforeend', `
