@@ -52,8 +52,27 @@ body {
   border-radius: 15px;
 }
 
+.first-three {
+  position: absolute;
+  margin-top: 550px;
+  left: 50px;
+  text-align: center;
+  padding: 15px;
+  width: 35%;
+  height: relative;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  background-color: rgba(218, 189, 111, 0.6);
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  border-radius: 15px;
+}
+
 ul {
   list-style: none;
+}
+
+li {
+  padding-bottom: 10px;
 }
 
 .li-header {
