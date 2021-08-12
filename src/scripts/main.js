@@ -1,12 +1,11 @@
 'use strict';
 
-const url = 'https://mate-academy.github.io/'
-  + 'phone-catalogue-static/api/phones';
+const BASE_URL = 'https://mate-academy.github.io/phone-catalogue-static/api';
 
-fetchData();
+fetchData('phones.json');
 
-function fetchData() {
-  fetch(`${url}.json`)
+function fetchData(url) {
+  fetch(`${BASE_URL}/${url}`)
     .then(data => data.json())
     .then(obj => {
       const allID = [];
@@ -23,7 +22,7 @@ function fetchData() {
 function getFirstReceivedDetails(list) {
   Promise.race(list)
     .then(firstID =>
-      fetch(`${url}/${firstID}.json`)
+      fetch(`${BASE_URL}/phones/${firstID}.json`)
         .then(getEl => getEl.json()))
     .then(elem =>
       document.body.insertAdjacentHTML('afterbegin', `
@@ -53,7 +52,7 @@ function getAllSuccessfulDetails(list) {
 
         li.classList = 'li-header ';
 
-        fetch(`${url}/${id}.json`)
+        fetch(`${BASE_URL}/phones/${id}.json`)
           .then(getEl => getEl.json())
           .then(elem =>
             li.append(`NAME: ${elem.name}, ID: ${elem.id}`),
