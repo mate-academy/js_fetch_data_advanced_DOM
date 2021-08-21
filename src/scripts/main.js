@@ -28,18 +28,19 @@ const getFirstReceivedDetails = (arr) => {
 };
 
 const getAllSuccessfulDetails = (arr) => {
-  Promise.all(arr.map(id => phonesDetails(id)))
+  Promise.allSettled(arr.map(id => phonesDetails(id)))
     .then(response => {
       body.insertAdjacentHTML('afterbegin', `
       <div class="all-successful">
        <h2>All Successful</h2>
-       <ul><ul>
+       <ul></ul>
       </div>
       `);
 
       const ul = document.querySelector('ul');
 
-      ul.innerHTML = response.map(phone => `<li>${phone.name}</li>`).join('');
+      ul.innerHTML = response.map(phone => `<li>${phone.value.name}</li>`)
+        .join('');
     });
 };
 
