@@ -1,0 +1,129 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 2,
+    "passes": 1,
+    "pending": 0,
+    "failures": 1,
+    "start": "2021-08-28T18:58:31.407Z",
+    "end": "2021-08-28T18:58:38.527Z",
+    "duration": 6999,
+    "testsRegistered": 2,
+    "passPercent": 50,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "816f023d-d176-4c41-bf6a-3f2bf9f057f7",
+      "title": "",
+      "fullFile": "cypress\\integration\\fetchDataAdvanced.spec.js",
+      "file": "cypress\\integration\\fetchDataAdvanced.spec.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "a2de4b5c-163b-4840-a639-79245b788b92",
+          "title": "Fetch phones app",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "should take an array of all successfully received details",
+              "fullTitle": "Fetch phones app should take an array of all successfully received details",
+              "timedOut": null,
+              "duration": 1869,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "cy.get('@all').contains('All Successful');",
+              "err": {},
+              "uuid": "5c782d8f-2543-419a-b51c-a491ee50d6f6",
+              "parentUUID": "a2de4b5c-163b-4840-a639-79245b788b92",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "should contain phones in all successful",
+              "fullTitle": "Fetch phones app should contain phones in all successful",
+              "timedOut": null,
+              "duration": 5130,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "cy.get('@all').contains('MOTOROLA-XOOM-WITH-WI-FI');\ncy.get('@all').contains('MOTOROLA-XOOM');\ncy.get('@all').contains('MOTOROLA-CHARM-WITH-MOTOBLUR');",
+              "err": {
+                "message": "AssertionError: Timed out retrying: Expected to find content: 'MOTOROLA-XOOM-WITH-WI-FI' within the element: <div.all-successful> but never did.",
+                "estack": "AssertionError: Timed out retrying: Expected to find content: 'MOTOROLA-XOOM-WITH-WI-FI' within the element: <div.all-successful> but never did.\n    at Context.eval (http://localhost:8080/__cypress/tests?p=cypress\\integration\\fetchDataAdvanced.spec.js:108:20)",
+                "diff": null
+              },
+              "uuid": "d5bfb839-7440-4685-a9d6-9a32a20f2270",
+              "parentUUID": "a2de4b5c-163b-4840-a639-79245b788b92",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "5c782d8f-2543-419a-b51c-a491ee50d6f6"
+          ],
+          "failures": [
+            "d5bfb839-7440-4685-a9d6-9a32a20f2270"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 6999,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.0.1"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": false,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "6.2.1"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "raw_reports",
+        "overwrite": false,
+        "html": false,
+        "json": true
+      },
+      "version": "5.1.0"
+    }
+  }
+}
