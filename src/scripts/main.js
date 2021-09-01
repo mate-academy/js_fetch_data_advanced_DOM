@@ -26,8 +26,14 @@ const getFirstReceivedDetails = (arr) => {
 };
 
 const getAllSuccessfulDetails = (arr) => {
-  Promise.all([...arr])
+  Promise.allSettled([...arr])
     .then(res => {
+      const fulfilled = res.map((item) => {
+        if (item.status === 'fulfilled') {
+          return item.value;
+        }
+      });
+
       document.body.insertAdjacentHTML('afterbegin', `
       <div class="all-successful">
       <h2>All Successful</h2>
@@ -36,7 +42,7 @@ const getAllSuccessfulDetails = (arr) => {
 
       const ul = document.querySelector('ul');
 
-      ul.innerHTML = res.map(item => `<li>${item.name}</li>`).join('');
+      ul.innerHTML = fulfilled.map(item => `<li>${item.name}</li>`).join('');
     });
 };
 
@@ -46,8 +52,8 @@ const getThreeFastestDetails = (arr) => {
   Promise.all([...arr])
     .then(res => {
       for (let i = 0; i < 3; i++) {
-        phoneArr.push(res[i]);
-      };
+        phoneArr.push(Promise.race(res).then(item => item));
+      }
     });
 };
 
