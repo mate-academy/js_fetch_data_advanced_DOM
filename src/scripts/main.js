@@ -5,7 +5,7 @@ const phonesUrl
 const detailUrl
   = 'https://mate-academy.github.io/phone-catalogue-static/api/phones/';
 
-function newElement(titleText, className, array) {
+function createList(titleText, className, array) {
   const element = document.createElement('ul');
   const title = document.createElement('h2');
 
@@ -38,14 +38,20 @@ const getPhonesDetails = (id) => {
 const getFirstReceivedDetails = (phonesArray) => {
   return Promise.race([...phonesArray])
     .then(first => {
-      newElement('First Received', 'first-received', [first]);
+      createList('First Received', 'first-received', [first]);
     });
 };
 
 const getAllSuccessfulDetails = (phonesArray) => {
-  return Promise.all([...phonesArray])
+  return Promise.allSettled(phonesArray)
     .then(all => {
-      newElement('All Successful', 'all-successful', [...all]);
+      const allowed = all.map(item => {
+        if (item.status === 'fulfilled') {
+          return item.value;
+        }
+      });
+
+      createList('All Successful', 'all-successful', allowed);
     });
 };
 
