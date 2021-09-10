@@ -14,7 +14,7 @@ The main goal of this task is an advanced using of Promises.
 
 Create next functions:
 - `getFirstReceivedDetails` which takes array of phone's ID and `resolves` with the first received detail (the fastest response NOT the first in the list). Ignore the other responses;
-- `getAllSuccessfulDetails` which takes array of phones' IDs and `resolves` with an array of all successfully received details (errors should be ignored).
+<!-- - `getAllSuccessfulDetails` which takes array of phones' IDs and `resolves` with an array of all successfully received details (errors should be ignored). -->
 
 (optional) `getThreeFastestDetails` which takes array of phones IDs and `resolves` with an array of the details for the first 3 responses (the fastest).
 
