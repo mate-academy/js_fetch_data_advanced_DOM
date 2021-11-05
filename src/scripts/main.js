@@ -3,26 +3,47 @@
 const BASE_URL = 'https://mate-academy.github.io/'
   + 'phone-catalogue-static/api/phones';
 
-function getPones() {
-  return fetch(`${BASE_URL}.json`)
-    .then(response => response.json())
-    .then(phones => phones.map(phone => phone.id));
-};
+function request(url) {
+  return fetch(url)
+    .then(responce => responce.json());
+}
+
+const phonesIdListArray
+  = request(`${BASE_URL}.json`)
+    .then(result => result)
+    .then(arrayPhonesResult => {
+      return arrayPhonesResult.map(phone => {
+        return request(`${BASE_URL}/${phone.id}.json`);
+      });
+    });
 
 function getFirstReceivedDetails(phones) {
-  const request = phones.map(phoneId =>
-    fetch(`${BASE_URL}/${phoneId}.json`));
-
-  return Promise.race(request)
-    .then(response => response.json());
+  return phones
+    .then(response => Promise.any(response));
 };
 
 function getAllSuccessfulDetails(phones) {
-  const request = phones.map(phoneId =>
-    fetch(`${BASE_URL}/${phoneId}.json`));
+  return phones
+    .then(response => {
+      return Promise.allSettled(response)
+        .then(results => results.filter(result => {
+          return result.status === 'fulfilled';
+        }))
+        .then(result => {
+          const resultArr = [];
 
-  return Promise.all(request)
-    .then(responses => Promise.all(responses.map(phone => phone.json())));
+          for (const object of result) {
+            resultArr.push(object.value);
+          };
+
+          return resultArr;
+        });
+    });
+};
+
+function getThreeFastestDetails(phones) {
+  return getAllSuccessfulDetails(phones)
+    .then(allPhones => allPhones.slice(0, 3));
 };
 
 function printNotify(list, notify, title) {
@@ -48,27 +69,18 @@ function printNotify(list, notify, title) {
   document.body.append(divElement);
 };
 
-getPones()
-  .then(getFirstReceivedDetails)
-  .then(phones => {
+getFirstReceivedDetails(phonesIdListArray)
+  .then(phone => {
     const phoneArr = [];
 
-    phoneArr.push(phones);
+    phoneArr.push(phone);
     printNotify(phoneArr, 'first-received', 'First Received');
-  })
-  .catch(error => error);
-
-getPones()
-  .then(getAllSuccessfulDetails)
-  .then(phones => printNotify(phones, 'all-successful', 'All Successful'));
-
-getPones()
-  .then(getAllSuccessfulDetails)
-  .then(phones => {
-    const phonesArr = [];
-
-    for (let i = 0; i < 3; i++) {
-      phonesArr.push(phones[i]);
-    }
-    printNotify(phonesArr, 'three-successful', 'Three successful');
   });
+
+getAllSuccessfulDetails(phonesIdListArray)
+  .then(phoneArr =>
+    printNotify(phoneArr, 'all-successful', 'All Successful'));
+
+getThreeFastestDetails(phonesIdListArray)
+  .then(phoneArr =>
+    printNotify(phoneArr, 'three-successful', 'Three Successful'));
