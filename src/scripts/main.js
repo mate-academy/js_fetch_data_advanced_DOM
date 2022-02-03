@@ -91,18 +91,6 @@ getPhones()
         li.textContent = result.name;
         document.querySelector('.first-received ul').append(li);
       });
-
-    // Promise.all(idArr)
-    //   .then(result => {
-    //     createDiv('All Successful', 'all-successful');
-
-    //     result.map(phone => {
-    //       const li = document.createElement('li');
-
-    //       li.textContent = phone.name;
-    //       document.querySelector('.all-successful ul').append(li);
-    //     });
-    //   });
   })
   .catch(error => error);
 
