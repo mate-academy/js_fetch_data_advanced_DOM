@@ -12,8 +12,7 @@ function firstReceived(result) {
       <ul>
         <li>
           Phone ID: ${result[0]}
-        </li>
-        <li>
+        <br>
           Phone Name: ${result[1]}
         </li>
       </ul>
@@ -21,9 +20,9 @@ function firstReceived(result) {
   `);
 }
 
-function allDetails(result) {
-  const arrayAllResponse = result;
-  let list;
+function liList(array) {
+  const arrayAllResponse = array;
+  let list = '';
 
   for (const liElem of arrayAllResponse) {
     list += `
@@ -35,10 +34,27 @@ function allDetails(result) {
     `;
   }
 
+  return list;
+}
+
+function allDetails(list) {
   body.insertAdjacentHTML('beforeend', `
     <div class="all-successful">
       <h2>
         All Successful
+      </h2>
+      <ol>
+        ${list}
+      </ol>
+    </div>
+  `);
+}
+
+function threeFastestDetail(list) {
+  body.insertAdjacentHTML('beforeend', `
+    <div class="three-fatest">
+      <h2>
+        Three Fastest
       </h2>
       <ol>
         ${list}
@@ -129,6 +145,41 @@ const getAllSuccessfulDetails = (ids) => {
   });
 };
 
+const getThreeFastestDetails = (ids) => {
+  let allIds = ids;
+  const threeFastest = [];
+  let count = 3;
+  let allRequests = allIds.map(el => `${baseUrl}/phones/${el}.json`);
+
+  return new Promise((resolve, reject) => {
+    function race() {
+      if (count > 0) {
+        count--;
+
+        Promise.race(allRequests.map(el => fetch(el)))
+          .then(data => data.json())
+          .then(result => {
+            threeFastest.push({
+              id: result.id,
+              name: result.name,
+            });
+
+            allIds = allIds.filter(el => el !== result.id);
+            allRequests = allIds.map(el => `${baseUrl}/phones/${el}.json`);
+
+            if (count === 0) {
+              resolve(threeFastest);
+            }
+
+            race();
+          });
+      }
+    }
+
+    race();
+  });
+};
+
 getPhones()
   .then(result => {
     const phonesIds = [];
@@ -158,5 +209,23 @@ getPhones()
   .then(response => {
     return getAllSuccessfulDetails(response);
   })
-  .then(allDetails)
+  .then(data => {
+    allDetails(liList(data));
+  })
+  .catch(onError);
+
+getPhones()
+  .then(result => {
+    const phonesIds = [];
+
+    for (const phone of result) {
+      phonesIds.push(phone.id);
+    }
+
+    return phonesIds;
+  })
+  .then(response => {
+    return getThreeFastestDetails(response);
+  })
+  .then(result => threeFastestDetail(liList(result)))
   .catch(onError);
