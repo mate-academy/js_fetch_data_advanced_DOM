@@ -68,7 +68,7 @@ const getThreeFastestDetails = (arr) => {
   const div = document.createElement('div');
 
   div.className = 'first-received';
-  div.style.top = '600px';
+  div.style.bottom = '20px';
   div.style.backgroundColor = 'pink';
 
   div.insertAdjacentHTML('beforeend', `
