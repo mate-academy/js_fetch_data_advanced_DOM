@@ -1,11 +1,11 @@
 'use strict';
 
 const link
-  = 'https://mate-academy.github.io/phone-catalogue-static/api/phones.json';
+  = 'https://mate-academy.github.io/phone-catalogue-static/api/phones';
 
 function getPhones() {
   return new Promise((resolve, reject) => {
-    fetch(link)
+    fetch(link + '.json')
       .then(result => {
         return resolve(result.json());
       })
@@ -30,7 +30,18 @@ function getAllSuccessfulDetails() {
   return new Promise((resolve, reject) => {
     getPhones()
       .then(result => {
-        return resolve(Promise.all(result));
+        return Promise.allSettled(result);
+      })
+      .then(result => {
+        const arr = [];
+
+        result.forEach(item => {
+          if (item.status === 'fulfilled') {
+            arr.push(item.value);
+          }
+        });
+
+        return resolve(arr);
       })
       .catch(error => reject(new Error('Error', error)));
   });
