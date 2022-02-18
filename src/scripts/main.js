@@ -1,11 +1,13 @@
 'use strict';
 
 const link
-  = 'https://mate-academy.github.io/phone-catalogue-static/api/phones';
+  = 'https://mate-academy.github.io/phone-catalogue-static/api/phones.json';
+const linkBase
+  = 'https://mate-academy.github.io/phone-catalogue-static/api/phones/';
 
-function getPhones() {
+function getPhones(url) {
   return new Promise((resolve, reject) => {
-    fetch(link + '.json')
+    fetch(url)
       .then(result => {
         return resolve(result.json());
       })
@@ -13,9 +15,23 @@ function getPhones() {
   });
 }
 
+function getIds() {
+  return getPhones(link)
+    .then(result => {
+      return result.map(phone => {
+        return phone.id;
+      });
+    });
+}
+
 function getFirstReceivedDetails() {
   return new Promise((resolve, reject) => {
-    getPhones()
+    getIds()
+      .then(result => {
+        return result.map(item => {
+          return getPhones(`${linkBase}${item}.json`);
+        });
+      })
       .then(result => {
         return Promise.race(result);
       })
@@ -28,7 +44,12 @@ function getFirstReceivedDetails() {
 
 function getAllSuccessfulDetails() {
   return new Promise((resolve, reject) => {
-    getPhones()
+    getIds()
+      .then(result => {
+        return result.map(item => {
+          return getPhones(`${linkBase}${item}.json`);
+        });
+      })
       .then(result => {
         return Promise.allSettled(result);
       })
@@ -49,13 +70,21 @@ function getAllSuccessfulDetails() {
 
 function getThreeFastestDetails() {
   return new Promise((resolve, reject) => {
-    getPhones()
+    getIds()
       .then(result => {
-        return resolve(Promise.all([
+        return result.map(item => {
+          return getPhones(`${linkBase}${item}.json`);
+        });
+      })
+      .then(result => {
+        return Promise.all([
           Promise.race(result),
           Promise.race(result),
           Promise.race(result),
-        ]));
+        ]);
+      })
+      .then(result => {
+        return resolve(result);
       })
       .catch(error => reject(new Error('Error', error)));
   });
