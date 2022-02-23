@@ -1,6 +1,6 @@
 'use strict';
 
-const link = `https://mate-academy.github.io/
+const BASE_LINK = `https://mate-academy.github.io/
 phone-catalogue-static/api/phones.json`;
 const linkBase = `https://mate-academy.github.io/
 phone-catalogue-static/api/phones/`;
@@ -16,7 +16,7 @@ function getPhones(url) {
 }
 
 function getIds() {
-  return getPhones(link)
+  return getPhones(BASE_LINK)
     .then(result => {
       return result.map(phone => {
         return phone.id;
