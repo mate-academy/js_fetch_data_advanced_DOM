@@ -59,7 +59,7 @@ function getFirstReceivedDetails(massId, resolves) {
         });
       })
       .then(result => {
-        return Promise.rase(result);
+        return Promise.race(result);
       })
       .then(result => {
         return resolve([result]);
