@@ -5,6 +5,8 @@ const phonesUrl
 const phonesDetailsUrl
   = 'https://mate-academy.github.io/phone-catalogue-static/api/phones/';
 
+// this function is necessary only for phones ids receiving
+
 function getPhones(url) {
   return fetch(url)
     .then(response => {
@@ -14,12 +16,37 @@ function getPhones(url) {
         }, 5000);
       }
 
-      return response.json();
+      return response.json()
+        .then(phones => phones.map(element => element.id));
     });
 }
 
-function getPhonesDetails(phonesDataArray) {
+function getFirstReceivedDetails(phonesID) {
+  const promisesArray = [];
+
+  for (const id of phonesID) {
+    promisesArray.push(fetch(`${phonesDetailsUrl}${id}.json`));
+  }
+
+  const firstReceived = Promise.race(promisesArray);
+
+  firstReceived.then(response => response.json())
+    .then(phoneDetails => {
+      makeDom(phoneDetails.id, phoneDetails.name,
+        'First received', 'first-received');
+    })
+    .catch(error => {
+      makeDom('Error:', error);
+    });
+
+  return firstReceived;
+}
+
+function getAllSuccessfulDetails(phonesDataArray) {
   const phoneDetailsArray = [];
+
+  // Promise.all isn't suitable here because
+  // we should receive data even if one of the promises would be rejected
 
   for (const phone of phonesDataArray) {
     fetch(`${phonesDetailsUrl}${phone}.json`)
@@ -31,7 +58,7 @@ function getPhonesDetails(phonesDataArray) {
           'All Successful', 'all-successful');
       })
       .catch(error => {
-        // console.log('Error:', error);
+        makeDom('rejected', 'rejected', 'Error', error);
 
         return error;
       });
@@ -40,54 +67,39 @@ function getPhonesDetails(phonesDataArray) {
   return phoneDetailsArray;
 }
 
-// the function below is suitable for one fastest response
-// and some fastest responces as well (not exactly 3)
-
-function getSomeFastestResponses(phonesDataArray, numberOfResponses) {
+function getThreeFastestDetails(phonesID) {
   const promisesArray = [];
-  const someFastestArray = [];
-  const phoneDetailsArray = [];
+  const threeFastestArray = [];
 
-  let fastestResponse;
-
-  for (const phone of phonesDataArray) {
-    const response = fetch(`${phonesDetailsUrl}${phone}.json`);
-
-    promisesArray.push(response);
+  for (const id of phonesID) {
+    promisesArray.push(fetch(`${phonesDetailsUrl}${id}.json`));
   }
 
-  for (let i = 0; i < numberOfResponses; i++) {
-    fastestResponse = getTheFastestResponse(promisesArray);
-    someFastestArray.push(fastestResponse);
-  }
+  for (let i = 0; i < 3; i++) {
+    const fastestResponse = Promise.race(promisesArray);
 
-  for (const phone of someFastestArray) {
-    phone.then(response => response.json())
-      .then(phoneDetails => {
-        phoneDetailsArray.push(phoneDetails);
+    threeFastestArray.push(fastestResponse);
 
-        makeDom(phoneDetails.id, phoneDetails.name,
-          'First received', 'first-received');
-      })
-      .catch(error => {
-        alert('Error:', error);
-      });
-  }
-
-  return phoneDetailsArray;
-}
-
-function getTheFastestResponse(promises) {
-  const result = Promise.race(promises);
-
-  for (let i = 0; i < promises.length; i++) {
-    if (promises[i].id === result.id) {
-      promises.splice(i, 1);
-      break;
+    for (let j = 0; j < promisesArray.length; j++) {
+      if (promisesArray[j].url === fastestResponse.url) {
+        promisesArray.splice(j, 1);
+        break;
+      }
     }
   }
 
-  return result;
+  for (const phone of threeFastestArray) {
+    phone.then(response => response.json())
+      .then(phoneDetails => {
+        makeDom(phoneDetails.id, phoneDetails.name,
+          'First three received', 'first-three-received');
+      })
+      .catch(error => {
+        makeDom('Error:', error);
+      });
+  }
+
+  return threeFastestArray;
 }
 
 function makeDom(elementId, elementName, header, nameOfClass) {
@@ -119,10 +131,14 @@ function makeDom(elementId, elementName, header, nameOfClass) {
   }
 }
 
-getPhones(phonesUrl).then(phones => {
-  getSomeFastestResponses(phones.map(element => element.id), 3);
+getPhones(phonesUrl).then(phonesId => {
+  getFirstReceivedDetails(phonesId);
 });
 
-getPhones(phonesUrl).then(phones => {
-  getPhonesDetails(phones.map(element => element.id));
+getPhones(phonesUrl).then(phonesId => {
+  getAllSuccessfulDetails(phonesId);
+});
+
+getPhones(phonesUrl).then(phonesId => {
+  getThreeFastestDetails(phonesId);
 });
