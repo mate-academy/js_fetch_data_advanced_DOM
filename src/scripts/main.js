@@ -31,7 +31,9 @@ function getPhonesDetails(phonesDataArray) {
           'All Successful', 'all-successful');
       })
       .catch(error => {
-        alert('Error:', error);
+        // console.log('Error:', error);
+
+        return error;
       });
   }
 
