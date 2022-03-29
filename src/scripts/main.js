@@ -95,7 +95,7 @@ function getThreeFastestDetails(phonesID) {
           'First three received', 'first-three-received');
       })
       .catch(error => {
-        makeDom('Error:', error);
+        makeDom('rejected', 'rejected', 'Error', error);
       });
   }
 
