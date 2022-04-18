@@ -25,6 +25,7 @@ body {
 
 .first-received {
   position: fixed;
+  top: 10px;
   left: 50px;
   text-align: center;
   padding: 15px;
@@ -35,6 +36,12 @@ body {
   background-color: rgba(157, 199, 219, 0.6);
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   border-radius: 15px;
+}
+
+.three-fastest {
+  position: absolute;
+  top: 250px;
+  left: 10px;
 }
 
 .all-successful {

@@ -37,17 +37,6 @@ const createDiv = (className, heading, arrayOfPhones) => {
       </li>
     `);
   });
-
-  const threeFastestUl = body.querySelector('.three-fastest');
-
-  threeFastestUl.style.position = 'absolute';
-  threeFastestUl.style.top = '200px';
-  threeFastestUl.style.left = '5px';
-
-  const firstReceivedUl = body.querySelector('.first-received');
-
-  firstReceivedUl.style.position = 'absolute';
-  firstReceivedUl.style.top = '20px';
 };
 
 const getFirstReceivedDetails = (ids) => {
@@ -68,29 +57,27 @@ const getThreeFastestDetails = (ids) => {
   const threeFastest = [];
   let count = 0;
 
-  const race = () => {
-    Promise.race(ids.map(el => fetch(`${baseUrl}${el}.json`)))
-      .then(response => response.json())
+  Promise.all(ids.map(el => {
+    return fetch(`${baseUrl}${el}.json`)
+      .then(response => ({
+        response,
+        count: count++,
+      }));
+  }))
+    .then(response => response.sort((a, b) => a.count - b.count))
+    .then(response => response.slice(0, 3))
+    .then(response => response.map(resp => resp.response.json()
       .then(result => {
-        if (threeFastest.filter(el => el.id !== result.id)) {
-          count++;
+        threeFastest.push({
+          id: result.id.toUpperCase(),
+          name: result.name,
+        });
 
-          threeFastest.push({
-            id: result.id.toUpperCase(),
-            name: result.name,
-          });
-
-          if (count === 3) {
-            createDiv('three-fastest', 'Three Fastest', threeFastest);
-
-            return;
-          }
+        if (threeFastest.length === 3) {
+          createDiv('three-fastest', 'Three Fastest', threeFastest);
         }
-        race();
-      });
-  };
-
-  race();
+      })
+    ));
 };
 
 const getAllSuccessfulDetails = (ids) => {
@@ -118,7 +105,8 @@ getPhonesId()
   .then(result => getFirstReceivedDetails(result));
 
 getPhonesId()
-  .then(result => getThreeFastestDetails(result));
+  .then(result => getThreeFastestDetails(result))
+  .catch(error => error);
 
 getPhonesId()
   .then(result => getAllSuccessfulDetails(result));
