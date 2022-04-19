@@ -2,20 +2,16 @@
 
 const baseUrl
   = 'https://mate-academy.github.io/phone-catalogue-static/api/phones/';
-const url
+const phonesUrl
   = 'https://mate-academy.github.io/phone-catalogue-static/api/phones.json';
 
 const body = document.querySelector('body');
 
 const getPhonesId = () => {
-  return fetch(url)
+  return fetch(phonesUrl)
     .then(response => response.json())
     .then(result => {
-      const arrayOfId = [];
-
-      result.map(phone => arrayOfId.push(phone.id));
-
-      return arrayOfId;
+      return result.map(phone => phone.id);
     });
 };
 
@@ -64,20 +60,21 @@ const getThreeFastestDetails = (ids) => {
         count: count++,
       }));
   }))
-    .then(response => response.sort((a, b) => a.count - b.count))
-    .then(response => response.slice(0, 3))
-    .then(response => response.map(resp => resp.response.json()
-      .then(result => {
-        threeFastest.push({
-          id: result.id.toUpperCase(),
-          name: result.name,
-        });
+    .then(response => response
+      .sort((a, b) => a.count - b.count)
+      .slice(0, 3)
+      .map(resp => resp.response.json()
+        .then(result => {
+          threeFastest.push({
+            id: result.id.toUpperCase(),
+            name: result.name,
+          });
 
-        if (threeFastest.length === 3) {
-          createDiv('three-fastest', 'Three Fastest', threeFastest);
-        }
-      })
-    ));
+          if (threeFastest.length === 3) {
+            createDiv('three-fastest', 'Three Fastest', threeFastest);
+          }
+        })
+      ));
 };
 
 const getAllSuccessfulDetails = (ids) => {
