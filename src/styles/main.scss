@@ -25,6 +25,7 @@ body {
 
 .first-received {
   position: fixed;
+  top: 10px;
   left: 50px;
   text-align: center;
   padding: 15px;
@@ -37,12 +38,18 @@ body {
   border-radius: 15px;
 }
 
+.three-fastest {
+  position: absolute;
+  top: 250px;
+  left: 10px;
+}
+
 .all-successful {
   position: fixed;
   margin-top: 5px;
   text-align: center;
   left: 60%;
-  padding: 5px, 5px, 5px, 5px;
+  padding: 5px;
   height: 90%;
   width: 35%;
   overflow-y: scroll;
