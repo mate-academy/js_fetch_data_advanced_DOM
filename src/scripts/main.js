@@ -4,6 +4,8 @@
 
 const url
   = 'https://mate-academy.github.io/phone-catalogue-static/api/phones.json';
+const urlDetail
+  = 'https://mate-academy.github.io/phone-catalogue-static/api/phones/';
 const body = document.querySelector('body');
 
 const getPhones = () => {
@@ -16,7 +18,7 @@ const getFirstReceivedDetails = (phones) => {
   const arr = [];
 
   for (const key of phones) {
-    const request = fetch(`${url.slice(0, -5)}/${key}.json`)
+    const request = fetch(`${urlDetail}${key}.json`)
       .then(response => response.json());
 
     arr.push(request);
@@ -54,7 +56,9 @@ const getAllSuccessfulDetails = (phones) => {
     arr.push(request);
   };
 
-  const result = Promise.all(arr);
+  const result = Promise.allSettled(arr)
+    .then(results => results.filter(details => details.status === 'fulfilled'))
+    .then(res => res.map(details => details.value));
 
   return result;
 };
