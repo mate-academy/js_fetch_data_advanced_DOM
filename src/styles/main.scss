@@ -23,6 +23,7 @@ body {
   justify-content: center;
 }
 
+.first-three,
 .first-received {
   position: fixed;
   left: 50px;
@@ -37,12 +38,16 @@ body {
   border-radius: 15px;
 }
 
+.first-three {
+  top: 35px;
+}
+
 .all-successful {
   position: fixed;
   margin-top: 5px;
   text-align: center;
   left: 60%;
-  padding: 5px, 5px, 5px, 5px;
+  padding: 5px;
   height: 90%;
   width: 35%;
   overflow-y: scroll;
