@@ -15,7 +15,7 @@ const request = (url = '') => {
     });
 };
 
-function elementMaker(className, title, data) {
+function createElement(className, title, data) {
   document.body.insertAdjacentHTML('beforeend', `
     <div class="${className}">
       <h3>${title}</h3>
@@ -35,7 +35,7 @@ getFirstReceivedDetails()
     return Promise.race(phones.map(phone => request(`/${phone.id}`)));
   })
   .then(phones => {
-    elementMaker('first-received', 'First Fastest', [phones]);
+    createElement('first-received', 'First Fastest', [phones]);
   });
 
 getAllSuccessfulDetails()
@@ -43,7 +43,7 @@ getAllSuccessfulDetails()
     return Promise.all(phones.map(phone => request(`/${phone.id}`)));
   })
   .then(phones => {
-    elementMaker('all-successful', 'All Successful', phones);
+    createElement('all-successful', 'All Successful', phones);
   });
 
 getThreeFastestDetails()
@@ -55,5 +55,5 @@ getThreeFastestDetails()
     ]);
   })
   .then(phones => {
-    elementMaker('three-fastest', 'Three Fastest', phones);
+    createElement('three-fastest', 'Three Fastest', phones);
   });
