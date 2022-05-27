@@ -32,10 +32,10 @@ function getFirstReceivedDetails() {
 
 function getAllSuccessfulDetails() {
   getPhones()
-    .then(phones => Promise.all(phones))
+    .then(phones => Promise.allSettled(phones))
     .then(phonesArr =>
       elemPattern('all-successful', 'All Successful',
-        phonesArr.map(phone => `<br>${phone.name}`)));
+        phonesArr.map(phone => `<br>${phone.value.name}`)));
 }
 
 function getThreeFastestDetails() {
