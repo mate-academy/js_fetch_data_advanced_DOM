@@ -24,6 +24,12 @@ function elemPattern(className, title, phoneName) {
   `);
 }
 
+function fulfilledStatus(arr) {
+  return arr
+    .filter(phone => phone.status === 'fulfilled')
+    .map(elem => `<br>${elem.value.name}`);
+}
+
 function getFirstReceivedDetails() {
   getPhones()
     .then(phones => Promise.race(phones))
@@ -35,7 +41,7 @@ function getAllSuccessfulDetails() {
     .then(phones => Promise.allSettled(phones))
     .then(phonesArr =>
       elemPattern('all-successful', 'All Successful',
-        phonesArr.map(phone => `<br>${phone.value.name}`)));
+        fulfilledStatus(phonesArr)));
 }
 
 function getThreeFastestDetails() {
