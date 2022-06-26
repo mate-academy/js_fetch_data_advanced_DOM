@@ -45,6 +45,8 @@
     "projectType": "layoutDOM"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.12.1"
+    "@babel/polyfill": "^7.12.1",
+    "cors": "^2.8.5",
+    "node-fetch": "^3.2.6"
   }
 }

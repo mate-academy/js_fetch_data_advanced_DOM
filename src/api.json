@@ -1,0 +1,48 @@
+{
+    "state": "ok",
+    "result": {
+        "title": "McAfee\u00ae Total Protection",
+        "elements": [
+            {
+                "product_key": "mcafee_total_1_1",
+                "price_key": "test",
+                "is_best": true,
+                "is_checked": true,
+                "is_disabled": false,
+                "is_addon": false,
+                "name_display": "McAfee\u00ae Total Protection 1-Year \/ 1-Device",
+                "name_prod": "McAfee\u00ae Total Protection",
+                "license_name": "1-Year \/ 1-Device",
+                "amount": "1.02",
+                "link": "https://sadownload.mcafee.com/products/sa/website/WebAdvisorInstaller.exe"
+            },
+            {
+                "product_key": "mcafee_total_1_3",
+                "price_key": "first",
+                "is_best": false,
+                "is_checked": false,
+                "is_disabled": false,
+                "is_addon": false,
+                "name_display": "McAfee\u00ae Total Protection 1-Year \/ 3-Devices",
+                "name_prod": "McAfee\u00ae Total Protection",
+                "license_name": "1-Year \/ 3-Device",
+                "amount": "39.99",
+                "link": "https://sadownload.mcafee.com/products/sa/website/WebAdvisorInstaller.exe"
+            },
+            {
+                "product_key": "mcafee_total_3_1_m",
+                "price_key": "50%",
+                "is_best": false,
+                "is_checked": false,
+                "is_disabled": false,
+                "is_addon": false,
+                "name_display": "McAfee\u00ae Total Protection 1-Device (monthly)",
+                "name_prod": "McAfee\u00ae Total Protection",
+                "license_name": "1-Device (Monthly)",
+                "amount": "4.99",
+                "amount_html": "$9.99<\/strike> $4.99<\/strong> (50% OFF)<\/span>",
+                "link": "https://sadownload.mcafee.com/products/sa/website/WebAdvisorInstaller.exe"
+            }
+        ]
+    }
+}
