@@ -1,24 +1,7 @@
 'use strict';
 
-const BASE_URL = 'https://mate-academy.github.io/phone-catalogue-static/api';
-const ENDPOINTS = {
-  phones: '/phones.json',
-  phoneById: (id) => `/phones/${id}.json`,
-};
+const { ENDPOINTS, request } = require('./requests');
 const body = document.body;
-
-const request = (url) => {
-  return fetch(`${BASE_URL}${url}`)
-    .then(response => {
-      if (!response.ok) {
-        Promise.reject(
-          new Error(`${response.status}: ${response.statusText}`)
-        );
-      }
-
-      return response.json();
-    });
-};
 
 const elementMaker = (className, title, data) => {
   body.insertAdjacentHTML('beforeend', `
@@ -31,25 +14,15 @@ const elementMaker = (className, title, data) => {
   `);
 };
 
-const getFirstReceivedDetails = () => {
-  request(ENDPOINTS.phones)
-    .then(phones => {
-      return Promise.race(phones.map(phone =>
-        request(ENDPOINTS.phoneById(phone.id))));
-    })
+const getFirstReceivedDetails = (ids) => {
+  Promise.race(ids.map(id => request(ENDPOINTS.phoneById(id))))
     .then(res => {
       elementMaker('first-received', 'First Fastest', [res]);
     });
 };
 
-getFirstReceivedDetails();
-
-const getAllSuccessfulDetails = () => {
-  request(ENDPOINTS.phones)
-    .then(phones => {
-      return Promise.allSettled(phones.map(phone =>
-        request(ENDPOINTS.phoneById(phone.id))));
-    })
+const getAllSuccessfulDetails = (ids) => {
+  Promise.allSettled(ids.map(id => request(ENDPOINTS.phoneById(id))))
     .then(res => {
       elementMaker('all-successful', 'All Successful',
         res.filter(item => item.status === 'fulfilled')
@@ -57,21 +30,25 @@ const getAllSuccessfulDetails = () => {
     });
 };
 
-getAllSuccessfulDetails();
+const getThreeFastestDetails = (ids) => {
+  const promises = [];
 
-const getThreeFastestDetails = () => {
-  request(ENDPOINTS.phones)
-    .then(phones => {
-      const promises = [];
+  for (let i = 0; i < 3; i++) {
+    promises.push(Promise.race(
+      ids.map(id => request(ENDPOINTS.phoneById(id)))
+    ));
+  }
 
-      for (let i = 0; i < 3; i++) {
-        promises.push(Promise.race(phones.map(phone =>
-          request(ENDPOINTS.phoneById(phone.id)))));
-      }
-
-      return Promise.all(promises);
-    })
-    .then(res => console.log(res)); // eslint-disable-line
+  Promise.all(promises).then(res => console.log(res)); // eslint-disable-line
 };
 
-getThreeFastestDetails();
+request(ENDPOINTS.phones)
+  .then(phones => {
+    const phonesIds = [];
+
+    phones.forEach(phone => phonesIds.push(phone.id));
+
+    getFirstReceivedDetails(phonesIds);
+    getAllSuccessfulDetails(phonesIds);
+    getThreeFastestDetails(phonesIds);
+  });
