@@ -13,7 +13,6 @@ const createList = (className, headerText) => {
 
   detail.className = className;
   header.innerText = headerText;
-
   detail.append(header);
   body.insertBefore(detail, body.lastElementChild);
 };
@@ -22,7 +21,6 @@ const createListItem = (id, nameOfPhone, className) => {
   const phone = document.createElement('li');
 
   phone.innerText = `ID: ${id} NAME: ${nameOfPhone}`;
-
   body.querySelector(`.${className}`).append(phone);
 };
 
@@ -38,7 +36,8 @@ function requestIds() {
 
           createListItem(fastestDetails.id, fastestDetails.name,
             'first-received');
-        });
+        })
+        .catch(error => new Error(error));
 
       getAllSuccessfulDetails(phonesIds)
         .then(details => {
@@ -66,7 +65,8 @@ function requestIds() {
           details.forEach(detail => {
             createListItem(detail.id, detail.name, 'three-fastest-successful');
           });
-        });
+        })
+        .catch(error => new Error(error));
     });
 };
 
