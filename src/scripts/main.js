@@ -55,6 +55,7 @@ function requestIds() {
           const listOfThreeFastest
             = body.querySelector('.three-fastest-successful');
 
+          listOfThreeFastest.style.position = 'absolute';
           listOfThreeFastest.style.top = '60%';
           listOfThreeFastest.style.left = '50px';
           listOfThreeFastest.style.backgroundColor = 'orange';
