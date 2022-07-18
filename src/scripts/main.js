@@ -52,6 +52,16 @@ function requestIds() {
         .then(details => {
           createList('three-fastest-successful', 'Three Fastest Successful');
 
+          const listOfThreeFastest
+            = body.querySelector('.three-fastest-successful');
+
+          listOfThreeFastest.style.position = 'absolute';
+          listOfThreeFastest.style.top = '60%';
+          listOfThreeFastest.style.left = '50px';
+          listOfThreeFastest.style.backgroundColor = 'orange';
+          listOfThreeFastest.style.padding = '15px';
+          listOfThreeFastest.style.borderRadius = '15px';
+
           details.forEach(detail => {
             createListItem(detail.id, detail.name, 'three-fastest-successful');
           });
