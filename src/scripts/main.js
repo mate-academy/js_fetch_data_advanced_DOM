@@ -19,23 +19,28 @@ const createDOM = (className, title, ids, position) => {
 
 const request = (url) => {
   return fetch(`${BASE_URL}${url}`)
-    .then(value => value.json())
-    .catch(error => Promise.reject(error));
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      }
+
+      return Promise.reject(new Error(`${response.status}`));
+    });
 };
 
 const getPhones = () => request(ENDPOINTS.phones);
 
-const map = (ids) => ids.map(id => request(ENDPOINTS.phoneById(id)));
+const mapId = (ids) => ids.map(id => request(ENDPOINTS.phoneById(id)));
 
 const getAllSuccessfulDetails = (ids) => {
-  return Promise.all(map(ids))
+  return Promise.all(mapId(ids))
     .then(data => {
       createDOM('all-successful', 'All Successful', data, 'beforeend');
     });
 };
 
 const getFirstSuccessfulDetails = (ids) => {
-  return Promise.race(map(ids))
+  return Promise.race(mapId(ids))
     .then(data => {
       createDOM('first-received', 'First Received', [data], 'afterbegin');
     });
@@ -45,7 +50,7 @@ const getThreeFastestDetails = (ids) => {
   const firstReceived = [];
 
   for (let i = 0; i < 3; i++) {
-    firstReceived.push(Promise.race((map(ids))));
+    firstReceived.push(Promise.race((mapId(ids))));
   }
 
   Promise.all(firstReceived).then(data => console.log(data)) // eslint-disable-line
