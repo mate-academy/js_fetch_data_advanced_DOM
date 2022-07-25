@@ -26,6 +26,7 @@ body {
 .first-received {
   position: fixed;
   left: 50px;
+  top: 200px;
   text-align: center;
   padding: 15px;
   width: 35%;
@@ -42,7 +43,7 @@ body {
   margin-top: 5px;
   text-align: center;
   left: 60%;
-  padding: 5px, 5px, 5px, 5px;
+  padding: 5px;
   height: 90%;
   width: 35%;
   overflow-y: scroll;
@@ -58,4 +59,18 @@ ul {
 
 .li-header {
   margin-top: 15px;
+}
+
+.three-received {
+  position: fixed;
+  left: 50px;
+  top: 400px;
+  text-align: center;
+  padding: 15px;
+  width: 35%;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+  background-color: rgba(219,197,157,0.6);
+  font-family: Arial, Helvetica, sans-serif;
+  border-radius: 15px;
 }
