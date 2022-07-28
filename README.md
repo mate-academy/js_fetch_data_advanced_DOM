@@ -23,3 +23,20 @@ Hints:
 - Create <div> elements with classes `first-received` and `all-successful` which contain list of phones;
 - Each <div> element should have <h3> headings with `First Received` or `All Successful` text;
 - All IDs and names of phones should be inside of  <li> elements.
+
+URL-адрес API:
+- Подробный URL-адрес: https://mate-academy.github.io/phone-catalogue-static/api/phones/:phoneId.json.
+
+Основная цель этой задачи — расширенное использование промисов.
+
+Создайте следующие функции:
+- `getFirstReceivedDetails`, который берет массив идентификатора телефона и `resolves` с первой полученной деталью (самый быстрый ответ НЕ первый в списке). Игнорируйте другие ответы;
+- `getAllSuccessfulDetails`, который берет массив идентификаторов телефонов и `resolves` с массивом всех успешно полученных деталей (ошибки следует игнорировать).
+
+(необязательно) `getThreeFastestDetails`, который принимает массив идентификаторов телефонов и `resolves` с массивом деталей для первых 3 ответов (самых быстрых).
+
+Подсказки:
+- Вы должны использовать DOM для уведомления пользователей о разрешенных или отклоненных обещаниях;
+- Создайте элементы <div> с классами `first-received` и `all-successful`, которые содержат список телефонов;
+- Каждый элемент <div> должен иметь заголовки <h3> с текстом  `First Received` or `All Successful`;
+- Все идентификаторы и названия телефонов должны находиться внутри элементов <li>.
