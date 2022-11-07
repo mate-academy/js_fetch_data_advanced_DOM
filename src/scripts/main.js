@@ -78,8 +78,8 @@ const getThreeFastestDetails = (arr) => {
 
   const fisrtElemets = [];
 
-  arr.forEach(xPromise => {
-    xPromise.then(PholeDetail => {
+  arr.forEach(res => {
+    res.then(PholeDetail => {
       if (fisrtElemets.length < 3) {
         fisrtElemets.push(PholeDetail);
       }
