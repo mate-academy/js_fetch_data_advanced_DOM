@@ -54,8 +54,14 @@ body {
 
 ul {
   list-style: none;
+  padding: 0;
+  margin: 0 0 15px;
+}
+
+.all-successful ul {
+  margin: 15px;
 }
 
 .li-header {
-  margin-top: 15px;
+  margin: 15px 0 0;
 }
