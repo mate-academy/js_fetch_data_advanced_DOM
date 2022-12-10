@@ -32,9 +32,11 @@ const request = (url) => {
             reject(new Error(`Error: ${response.status}`));
           }, 5000);
         }),
-        new Promise(resolve => {
+        new Promise((resolve, reject) => {
           if (response.ok) {
             resolve(response.json());
+          } else {
+            reject(new Error('Can not connect to the server.'));
           }
         }),
       ]);
@@ -42,11 +44,13 @@ const request = (url) => {
 };
 
 const getPhoneIds = (startTime) => {
+  const timeout = 15000;
+
   return request(`${BASE_URL}.json`)
-    .then(result => result.map(el => el.id))
+    .then(phones => phones.map(phone => phone.id))
     .catch(err => {
-      if (startTime + 15000 < Date.now()) {
-        getPhoneIds();
+      if (startTime + timeout < Date.now()) {
+        return getPhoneIds();
       }
 
       return Promise.reject(err);
@@ -54,55 +58,78 @@ const getPhoneIds = (startTime) => {
 };
 
 const getFirstReceivedDetails = (phoneIds) => {
-  return Promise.race(phoneIds.map(id => request(`${BASE_URL}/${id}.json`)))
-    .then(result => {
-      return result;
-    })
-    .then(result => [result]);
+  return Promise.any(phoneIds.map(id => request(`${BASE_URL}/${id}.json`)));
 };
 
 const getAllSuccessfulDetails = (phoneIds) => {
-  return Promise.all(phoneIds.map(id => request(`${BASE_URL}/${id}.json`)))
-    .then(result => {
-      return result;
-    })
-    .then(result => result);
+  return Promise.allSettled(
+    [...phoneIds].map(id => request(`${BASE_URL}/${id}.json`))
+  );
 };
 
 const getThreeFastestDetails = (phoneIds) => {
-  let results = 0;
+  const promises = [];
+  const idsSlice = [
+    phoneIds.slice(0, phoneIds.length / 3),
+    phoneIds.slice(phoneIds.length / 3, 2 * phoneIds.length / 3),
+    phoneIds.slice(2 * phoneIds.length / 3),
+  ];
 
-  return Promise.all(phoneIds.map(id => {
-    if (results < 3) {
-      results++;
+  idsSlice.forEach(ids => {
+    promises.push(Promise.any(
+      ids.map(id => request(`${BASE_URL}/${id}.json`))
+    ));
+  });
 
-      return request(`${BASE_URL}/${id}.json`);
-    }
-
-    return false;
-  }))
-    .then(res => res.filter(el => el));
+  return promises;
 };
 
-const insertToContainer = (array, container) => {
+const insertToContainer = (phone, container) => {
   document.getElementById(container)
-    .insertAdjacentHTML('afterend', `
-      <ul>
-        ${array.map(el => `<li>${el.id.toUpperCase()}</li>`).join('')}
-      </ul>
-    `);
+    .insertAdjacentHTML('beforeend', `<li>${phone.id.toUpperCase()}</li>`);
 };
 
-getPhoneIds(Date.now()).then(ids => {
-  getFirstReceivedDetails(ids).then(arr => {
-    insertToContainer(arr, 'first');
-  });
+const renderError = (error, container) => {
+  document.getElementById(container)
+    .insertAdjacentHTML('beforeend',
+      `<li class="error">${error}</li>`);
+};
 
-  getAllSuccessfulDetails(ids).then(arr => {
-    insertToContainer(arr, 'all');
-  });
+window.addEventListener('load', () => {
+  getPhoneIds(Date.now())
+    .then(ids => {
+      getFirstReceivedDetails(ids)
+        .then(phone => {
+          insertToContainer(phone, 'first');
+        })
+        .catch(err => {
+          renderError(err.message, 'first');
+        });
 
-  getThreeFastestDetails(ids).then(arr => {
-    insertToContainer(arr, 'first-three');
-  });
+      getAllSuccessfulDetails(ids)
+        .then(phones => {
+          phones.forEach(phone => {
+            if (phone.status === 'fulfilled') {
+              insertToContainer(phone.value, 'all');
+            } else {
+              renderError(phone.reason, 'all');
+            }
+          });
+        });
+
+      getThreeFastestDetails(ids).forEach(promise => {
+        promise
+          .then(phone => {
+            insertToContainer(phone, 'first-three');
+          })
+          .catch(err => {
+            renderError(err.message, 'first-three');
+          });
+      });
+    })
+    .catch(err => {
+      renderError(err.message, 'all');
+      renderError(err.message, 'first');
+      renderError(err.message, 'first-three');
+    });
 });
