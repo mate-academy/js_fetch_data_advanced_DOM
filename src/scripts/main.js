@@ -1,31 +1,11 @@
 'use strict';
 
-/**
- * API Url:
-- Details URL:
-  https://mate-academy.github.io/phone-catalogue-static/api/phones/:phoneId.json
-
-Functions:
-- `getFirstReceivedDetails`
-  takes array of phone's ID and `resolves` with the first received detail
-  (the fastest response NOT the first in the list). Ignore the other responses;
-- `getAllSuccessfulDetails`
-  which takes array of phones' IDs and `resolves` with an array of all
-  successfully received details (errors should be ignored).
-
-- `getThreeFastestDetails`
-  which takes array of phones IDs and `resolves` with an array of the details
-  for the first 3 responses (the fastest).
-
-*/
-
 const BASE_URL = 'https://mate-academy.github.io/'
   + 'phone-catalogue-static/api/phones';
 
 const request = (url) => {
   return fetch(url)
     .then((response) => {
-      // Create a promise that rejects in 5 milliseconds
       return Promise.race([
         new Promise((resolve, reject) => {
           setTimeout(() => {
@@ -69,50 +49,55 @@ const getAllSuccessfulDetails = (phoneIds) => {
 
 const getThreeFastestDetails = (phoneIds) => {
   const promises = [];
-  const idsSlice = [
+  const idsInThreeChunks = [
     phoneIds.slice(0, phoneIds.length / 3),
     phoneIds.slice(phoneIds.length / 3, 2 * phoneIds.length / 3),
     phoneIds.slice(2 * phoneIds.length / 3),
   ];
 
-  idsSlice.forEach(ids => {
+  idsInThreeChunks.forEach(chunk => {
     promises.push(Promise.any(
-      ids.map(id => request(`${BASE_URL}/${id}.json`))
+      chunk.map(id => request(`${BASE_URL}/${id}.json`))
     ));
   });
 
   return promises;
 };
 
-const insertToContainer = (phone, container) => {
-  document.getElementById(container)
-    .insertAdjacentHTML('beforeend', `<li>${phone.id.toUpperCase()}</li>`);
-};
-
-const renderError = (error, container) => {
-  document.getElementById(container)
-    .insertAdjacentHTML('beforeend',
-      `<li class="error">${error}</li>`);
-};
-
 window.addEventListener('load', () => {
+  const containerFirst = document.getElementById('first');
+  const containerAll = document.getElementById('all');
+  const containerFirstThree = document.getElementById('first-three');
+
   getPhoneIds(Date.now())
     .then(ids => {
       getFirstReceivedDetails(ids)
         .then(phone => {
-          insertToContainer(phone, 'first');
+          containerFirst
+            .insertAdjacentHTML(
+              'beforeend',
+              `<li>${phone.id.toUpperCase()}</li>`
+            );
         })
         .catch(err => {
-          renderError(err.message, 'first');
+          containerFirst
+            .insertAdjacentHTML('beforeend',
+              `<li class="error">${err.message}</li>`);
         });
 
       getAllSuccessfulDetails(ids)
         .then(phones => {
           phones.forEach(phone => {
             if (phone.status === 'fulfilled') {
-              insertToContainer(phone.value, 'all');
+              containerAll
+                .insertAdjacentHTML(
+                  'beforeend',
+                  `<li>${phone.value.id.toUpperCase()}</li>`
+                );
             } else {
-              renderError(phone.reason, 'all');
+              containerAll
+                .insertAdjacentHTML('beforeend',
+                  `<li class="error">${phone.reason}</li>`);
             }
           });
         });
@@ -120,16 +105,25 @@ window.addEventListener('load', () => {
       getThreeFastestDetails(ids).forEach(promise => {
         promise
           .then(phone => {
-            insertToContainer(phone, 'first-three');
+            containerFirstThree
+              .insertAdjacentHTML(
+                'beforeend',
+                `<li>${phone.id.toUpperCase()}</li>`
+              );
           })
           .catch(err => {
-            renderError(err.message, 'first-three');
+            containerFirstThree
+              .insertAdjacentHTML('beforeend',
+                `<li class="error">${err.message}</li>`);
           });
       });
     })
     .catch(err => {
-      renderError(err.message, 'all');
-      renderError(err.message, 'first');
-      renderError(err.message, 'first-three');
+      [containerFirst, containerAll, containerFirstThree]
+        .map(container => {
+          container
+            .insertAdjacentHTML('beforeend',
+              `<li class="error">${err.message}</li>`);
+        });
     });
 });
